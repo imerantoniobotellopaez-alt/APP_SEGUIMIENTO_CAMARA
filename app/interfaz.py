@@ -1,129 +1,132 @@
 import tkinter as tk
 from tkinter import ttk
-import cv2
-from PIL import Image, ImageTk
+from app.estilo import colores, dimensiones
+from app.componentes.sidebar import Sidebar
+
 
 class PresenterAI:
     def __init__(self, root):
         self.root = root
-        self.root.title("Seguimiento camara")
-        self.root.geometry("1620x720")
+        self._configurar_ventana()
+        self._construir_layout()
 
-        self.camera = None
-        self.running = False
-        self.image_tk = None
+    def _configurar_ventana(self):
+        self.root.grid_rowconfigure(0, weight=1)
+        self.root.grid_columnconfigure(0, weight=1)
 
-        # interfaz
-        self.title_label = ttk.Label(
-            root,
-            text="Seguimiento Camara",
-            font=("Arial", 22, "bold")
+    def _construir_layout(self):
+        self.main_container = ttk.Frame(
+            self.root,
+            style="TFrame"
         )
-        self.title_label.pack(pady=15)
-
-        #Area de la camara
-        self.video_label = ttk.Label(root)
-        self.video_label.pack(pady=10)
-
-        #Botones
-        self.btn_start = ttk.Button(
-            root,
-            text="Iniciar Camara",
-            command=self.start_camera
+        self.main_container.grid(
+            row=0,
+            column=0,
+            sticky="nsew"
         )
-        self.btn_start.pack(pady=5)
-        self.btn_stop = ttk.Button(
-            root,
-            text="Detener Camara",
-            command=self.stop_camera
+
+        self.main_container.grid_rowconfigure(1, weight=1)
+        self.main_container.grid_columnconfigure(1, weight=1)
+
+        self._crear_sidebar()
+        self._crear_encabezado()
+        self._crear_cuerpo()
+
+    def _crear_sidebar(self):
+        self.sidebar = Sidebar(
+            self.main_container
         )
-        self.btn_stop.pack(pady=5)
-
-        # Estado
-        self.status_label = ttk.Label(
-            root,
-            text="Camara Detenida"
+        self.sidebar.grid(
+            row=0, 
+            column=0, 
+            rowspan=2, 
+            sticky="ns"
         )
-        self.status_label.pack(pady=10)
-        self.root.protocol("WM_DELETE_WINDOW", self.close_app)
+        self.sidebar.grid_propagate(False)
 
-    def start_camera(self):
-        if self.running:
-            return
+        tk.Label(
+            self.sidebar,
+            text="SIDEBAR",
+            bg=colores["panel"],
+            fg=colores["texto"],
+            font=("Segoe UI", 12, "bold"),
+        ).pack(pady=24)
 
-        self.camera = cv2.VideoCapture(0, cv2.CAP_ANY)
-        
-        if not self.camera.isOpened():
-            self.status_label.config(
-                text="Error al iniciar camara"
-            )
-            self.camera.release()
-            self.camera = None
-            return
-        
-        self.running = True
-        self.status_label.config(text="Camara activa")
-
-        self.update_frame()
-
-    def update_frame(self):
-        if not self.running:
-            return    
-            
-        ret, frame = self.camera.read()  
-
-        if ret and frame is not None:
-            # Convertr BGR A RGB
-
-            frame = cv2.cvtColor(
-                frame,
-                cv2.COLOR_BGR2RGB
-            )
-
-            # Convertir a imagen compatible con tkinter
-            image = Image.fromarray(frame)
-
-            self.image_tk = ImageTk.PhotoImage(image)
-
-            self.video_label.config(
-                image=self.image_tk
-            )
-
-            self.status_label.config(
-                text="Conectado, pero sin recibir video"
-            )
-        
-        else:
-            self.status_label.config(
-                text="No se recibio un frame valido"
-            )
-
-        #actualizar cada 15ms
-        self.root.after(15, self.update_frame)
-        
-    def stop_camera(self):
-        self.running = False
-
-        if self.camera is not None:
-            self.camera.release()
-            self.camera = None
-            
-        self.video_label.config(image="")
-        self.image_tk = None
-
-        self.status_label.config(
-            text="Camara Detenida"
+    def _crear_encabezado(self):
+        self.encabezado = ttk.Frame(
+            self.main_container,
+            style="panel.TFrame"
         )
-        
-    def close_app(self):
-        self.stop_camera()
-        self.root.destroy()
+        self.encabezado.grid(
+            row=0,
+            column=1,
+            sticky="ew",
+            padx=dimensiones["padding"],
+            pady=(dimensiones["padding"], 0),
+        )
+        self.encabezado.grid_columnconfigure(0, weight=1)
+
+        ttk.Label(
+            self.encabezado,
+            text="ENCABEZADO",
+            style="Panel.TLabel",
+        ).grid(
+            row=0,
+            column=0,
+            sticky="w",
+            padx=14,
+            pady=14
+        )
+
+    def _crear_cuerpo(self):
+        self.cuerpo = ttk.Frame(
+            self.main_container,
+            style="TFrame"
+        )
+        self.cuerpo.grid(
+            row=1,
+            column=1,
+            sticky="nsew",
+            padx=dimensiones["padding"],
+            pady=dimensiones["padding"],
+        )
+        self.cuerpo.grid_rowconfigure(0, weight=1)
+        self.cuerpo.grid_columnconfigure(0, weight=3)
+        self.cuerpo.grid_columnconfigure(1, weight=2)
+
+        self.panel_camara = ttk.Frame(
+            self.cuerpo,
+            style="panel.TFrame"
+        )
+        self.panel_camara.grid(
+            row=0, 
+            column=0,
+            sticky="nsew",
+            padx=(0,8)
+        )
+        ttk.Label(
+            self.panel_camara,
+            text="PANEL CAMARA",
+            style="Panel.TLabel",
+        ).pack(expand=True)
+
+        self.panel_configuracion = ttk.Frame(
+            self.cuerpo,
+            style="panel.TFrame"                
+        )
+        self.panel_configuracion.grid(
+            row=0,
+            column=1,
+            sticky="nsew",
+            padx=(8,0)
+        )
+        ttk.Label(
+            self.panel_configuracion,
+            text="PANEL CONFIGURACION",
+            style="Panel.TLabel",
+        ).pack(expand=True)
+
+
+
+
     
-
-
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = PresenterAI(root)
-    root.mainloop()
-
