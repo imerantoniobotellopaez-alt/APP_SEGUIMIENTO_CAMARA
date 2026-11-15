@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from app.estilo import colores, dimensiones
 from app.componentes.sidebar import Sidebar
+from app.componentes.encabezado import Encabezado
 
 
 class PresenterAI:
@@ -53,29 +54,13 @@ class PresenterAI:
         ).pack(pady=24)
 
     def _crear_encabezado(self):
-        self.encabezado = ttk.Frame(
-            self.main_container,
-            style="panel.TFrame"
-        )
+        self.encabezado = Encabezado(self.main_container,)
         self.encabezado.grid(
             row=0,
             column=1,
             sticky="ew",
             padx=dimensiones["padding"],
             pady=(dimensiones["padding"], 0),
-        )
-        self.encabezado.grid_columnconfigure(0, weight=1)
-
-        ttk.Label(
-            self.encabezado,
-            text="ENCABEZADO",
-            style="Panel.TLabel",
-        ).grid(
-            row=0,
-            column=0,
-            sticky="w",
-            padx=14,
-            pady=14
         )
 
     def _crear_cuerpo(self):

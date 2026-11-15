@@ -15,7 +15,7 @@ def main():
     activar_dpi()
 
     root = tk.Tk()
-    root.title("Presenter AI")
+    root.title("Iglesia Emanuel")
     root.geometry("1440x860")
     root.minsize(1024, 640)
     aplicar_estilo(root)
