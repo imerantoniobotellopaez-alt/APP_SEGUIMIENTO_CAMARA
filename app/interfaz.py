@@ -4,6 +4,7 @@ from app.estilo import colores, dimensiones
 from app.componentes.sidebar import Sidebar
 from app.componentes.encabezado import Encabezado
 from app.componentes.panel_camara import PanelCamara
+from app.componentes.panel_configuracion import PanelConfiguracion
 
 
 class PresenterAI:
@@ -86,13 +87,10 @@ class PresenterAI:
             padx=(0,8)
         )
 
-        self.panel_configuracion = ttk.Frame(
-            self.cuerpo,
-            style="panel.TFrame"                
-        )
+        self.panel_configuracion = PanelConfiguracion(self.cuerpo)
         self.panel_configuracion.grid(
             row=0,
             column=1,
             sticky="nsew",
-            padx=(8,0)
+            padx=(8, 0),     
         )
