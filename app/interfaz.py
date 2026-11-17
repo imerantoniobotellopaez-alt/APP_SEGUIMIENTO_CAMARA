@@ -3,6 +3,7 @@ from tkinter import ttk
 from app.estilo import colores, dimensiones
 from app.componentes.sidebar import Sidebar
 from app.componentes.encabezado import Encabezado
+from app.componentes.panel_camara import PanelCamara
 
 
 class PresenterAI:
@@ -64,10 +65,8 @@ class PresenterAI:
         )
 
     def _crear_cuerpo(self):
-        self.cuerpo = ttk.Frame(
-            self.main_container,
-            style="TFrame"
-        )
+        self.cuerpo = ttk.Frame(self.main_container, style="TFrame")
+
         self.cuerpo.grid(
             row=1,
             column=1,
@@ -79,21 +78,13 @@ class PresenterAI:
         self.cuerpo.grid_columnconfigure(0, weight=3)
         self.cuerpo.grid_columnconfigure(1, weight=2)
 
-        self.panel_camara = ttk.Frame(
-            self.cuerpo,
-            style="panel.TFrame"
-        )
+        self.panel_camara = PanelCamara(self.cuerpo)
         self.panel_camara.grid(
             row=0, 
             column=0,
             sticky="nsew",
             padx=(0,8)
         )
-        ttk.Label(
-            self.panel_camara,
-            text="PANEL CAMARA",
-            style="Panel.TLabel",
-        ).pack(expand=True)
 
         self.panel_configuracion = ttk.Frame(
             self.cuerpo,
@@ -105,13 +96,3 @@ class PresenterAI:
             sticky="nsew",
             padx=(8,0)
         )
-        ttk.Label(
-            self.panel_configuracion,
-            text="PANEL CONFIGURACION",
-            style="Panel.TLabel",
-        ).pack(expand=True)
-
-
-
-
-    

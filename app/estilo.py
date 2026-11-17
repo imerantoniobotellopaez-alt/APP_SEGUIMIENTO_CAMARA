@@ -31,7 +31,7 @@ dimensiones = {
     "padding": 16,
     "padding_chico": 8,
     "radio": 12,
-    "preview_radio": 16 / 9,
+    "preview_ratio": 16 / 9,
 }
 
 def aplicar_estilo(root):

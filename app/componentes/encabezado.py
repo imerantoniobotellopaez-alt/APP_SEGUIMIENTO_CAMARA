@@ -38,4 +38,30 @@ class Encabezado(tk.Frame):
             padx=16,
             pady=12
         )
-        
+
+        badge = tk.Frame(contenedor, bg=colores["panel_secundario"])
+        badge.pack()
+
+        tk.Label(
+            badge,
+            text="●",
+            bg=colores["panel_secundario"],
+            fg=colores["verde"],
+            font=("Segoe UI", 8),
+        ).pack(
+            side="left", 
+            padx=(10, 6), 
+            pady=5
+        )
+
+        tk.Label(
+            badge,
+            text="camara conectada",
+            bg=colores["panel_secundario"],
+            fg=colores["texto_secundario"],
+            font=("Segoe UI", 9),
+        ).pack(
+            side="left",
+            padx=(0, 10),
+            pady=5
+        )
