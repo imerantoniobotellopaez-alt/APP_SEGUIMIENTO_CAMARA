@@ -5,13 +5,18 @@ from app.componentes.sidebar import Sidebar
 from app.componentes.encabezado import Encabezado
 from app.componentes.panel_camara import PanelCamara
 from app.componentes.panel_configuracion import PanelConfiguracion
+from logica.camera import Camera
 
 
 class PresenterAI:
     def __init__(self, root):
         self.root = root
+        self.camera = Camera()
+        self.video_activo = False
         self._configurar_ventana()
         self._construir_layout()
+        self._iniciar_video()
+        self.root.protocol("WM_DELETE_WINDOW", self._cerrar)
 
     def _configurar_ventana(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -45,15 +50,6 @@ class PresenterAI:
             rowspan=2, 
             sticky="ns"
         )
-        self.sidebar.grid_propagate(False)
-
-        tk.Label(
-            self.sidebar,
-            text="SIDEBAR",
-            bg=colores["panel"],
-            fg=colores["texto"],
-            font=("Segoe UI", 12, "bold"),
-        ).pack(pady=24)
 
     def _crear_encabezado(self):
         self.encabezado = Encabezado(self.main_container,)
@@ -94,3 +90,28 @@ class PresenterAI:
             sticky="nsew",
             padx=(8, 0),     
         )
+
+    def _iniciar_video(self):
+        if self.video_activo:
+            return
+
+        if not self.camera.abrir():
+            return
+
+        self.video_activo = True
+        self._actualizar_video()
+
+    def _actualizar_video(self):
+        if not self.video_activo:
+            return
+
+        frame = self.camera.leer()
+        if frame is not None:
+            self.panel_camara.mostrar_frame(frame)
+
+        self.root.after(30, self._actualizar_video)
+    
+    def _cerrar(self):
+        self.video_activo = False
+        self.camera.cerrar()
+        self.root.destroy()
