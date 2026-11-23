@@ -42,26 +42,28 @@ class Encabezado(tk.Frame):
         badge = tk.Frame(contenedor, bg=colores["panel_secundario"])
         badge.pack()
 
-        tk.Label(
+        self.punto_estado = tk.Label(
             badge,
             text="●",
             bg=colores["panel_secundario"],
-            fg=colores["verde"],
+            fg=colores["texto_secundario"],
             font=("Segoe UI", 8),
-        ).pack(
-            side="left", 
-            padx=(10, 6), 
-            pady=5
         )
+        self.punto_estado.pack(side="left", padx=(10, 6), pady=5)
 
-        tk.Label(
+        self.texto_estado = tk.Label(
             badge,
-            text="camara conectada",
+            text="camara desconectada",
             bg=colores["panel_secundario"],
             fg=colores["texto_secundario"],
             font=("Segoe UI", 9),
-        ).pack(
-            side="left",
-            padx=(0, 10),
-            pady=5
         )
+        self.texto_estado.pack(side="left", padx=(0, 10), pady=5)
+    
+    def set_estado(self, conectada):
+        if conectada:
+            self.punto_estado.configure(fg=colores["verde"])
+            self.texto_estado.configure(text="camara conectada")
+        else:
+            self.punto_estado.configure(fg=colores["texto_secundario"])
+            self.texto_estado.configure(text="camara desconectada")

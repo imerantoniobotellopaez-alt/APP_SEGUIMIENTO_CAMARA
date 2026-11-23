@@ -15,7 +15,7 @@ class PresenterAI:
         self.video_activo = False
         self._configurar_ventana()
         self._construir_layout()
-        self._iniciar_video()
+        self._conectar_eventos()
         self.root.protocol("WM_DELETE_WINDOW", self._cerrar)
 
     def _configurar_ventana(self):
@@ -91,6 +91,14 @@ class PresenterAI:
             padx=(8, 0),     
         )
 
+    def _conectar_eventos(self):
+        self.panel_configuracion.btn_iniciar.configure(
+            command=self._iniciar_video
+        )
+        self.panel_configuracion.btn_detener.configure(
+            command=self._detener_video
+        )
+
     def _iniciar_video(self):
         if self.video_activo:
             return
@@ -99,7 +107,16 @@ class PresenterAI:
             return
 
         self.video_activo = True
+        self.encabezado.set_estado(True)
+        self.panel_configuracion.set_activo(True)
         self._actualizar_video()
+
+    def _detener_video(self):
+        self.video_activo = False
+        self.camera.cerrar()
+        self.panel_camara.mostrar_placeholder()
+        self.encabezado.set_estado(False)
+        self.panel_configuracion.set_activo(False)
 
     def _actualizar_video(self):
         if not self.video_activo:
@@ -112,6 +129,5 @@ class PresenterAI:
         self.root.after(30, self._actualizar_video)
     
     def _cerrar(self):
-        self.video_activo = False
-        self.camera.cerrar()
+        self._detener_video()
         self.root.destroy()

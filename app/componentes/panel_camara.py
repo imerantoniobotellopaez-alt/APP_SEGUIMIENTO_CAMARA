@@ -86,4 +86,10 @@ class PanelCamara(tk.Frame):
         self.video_label.configure(image=self.image_tk)
 
         if self.placeholder.winfo_ismapped():
-            self.placeholder.place_forget
+            self.placeholder.place_forget()
+
+    def mostrar_placeholder(self):
+        self.image_tk = None
+        self.video_label.configure(image="")
+        self.placeholder.place(relx=0.5, rely=0.5, anchor="center")
+        self.placeholder.lift()

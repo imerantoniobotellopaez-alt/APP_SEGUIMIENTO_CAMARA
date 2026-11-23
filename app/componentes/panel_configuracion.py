@@ -8,6 +8,7 @@ class PanelConfiguracion(tk.Frame):
         self._crear_tarjetas()
         self._crear_estado()
         self._crear_botones()
+        self.set_activo(False)
 
     def _crear_tarjetas(self):
         tk.Label(
@@ -111,3 +112,11 @@ class PanelConfiguracion(tk.Frame):
             style="Secundario.TButton",
         )
         self.btn_detener.grid(row=0, column=1, sticky="ew", padx=(6, 0))
+
+    def set_activo(self, activo):
+        self.btn_iniciar.configure(
+            state="disable" if activo else "normal"
+        )
+        self.btn_detener.configure(
+            state="normal" if activo else "disable"
+        )
